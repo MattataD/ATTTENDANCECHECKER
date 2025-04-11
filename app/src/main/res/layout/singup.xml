@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="260dp"
+        android:layout_marginTop="250dp"
         android:outlineSpotShadowColor="@color/black"
         app:cardCornerRadius="40dp">
 
@@ -28,18 +28,16 @@
             android:orientation="vertical"
             android:padding="10dp">
 
-            <!-- Sign Up Text -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Sign Up"
+                android:text="SIGN UP"
                 android:textAlignment="center"
                 android:textColor="@color/DirtyMatcha"
-                android:textSize="50sp"
+                android:textSize="30sp"
                 android:textStyle="bold" />
 
-            <!-- Name EditText -->
             <EditText
                 android:id="@+id/signup_name"
                 android:layout_width="match_parent"
@@ -52,7 +50,6 @@
                 android:padding="10dp"
                 android:textColor="@color/black" />
 
-            <!-- Email EditText -->
             <EditText
                 android:id="@+id/signup_email"
                 android:layout_width="match_parent"
@@ -65,20 +62,18 @@
                 android:padding="10dp"
                 android:textColor="@color/black" />
 
-            <!-- TUP ID EditText -->
             <EditText
                 android:id="@+id/signup_tupid"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/dirtymatcha_border"
                 android:drawableLeft="@drawable/baseline_co_present_24"
                 android:drawablePadding="8dp"
-                android:hint="TUP ID"
+                android:hint="ID"
                 android:padding="10dp"
                 android:textColor="@color/black" />
 
-            <!-- Password EditText -->
             <EditText
                 android:id="@+id/signup_password"
                 android:layout_width="match_parent"
@@ -91,20 +86,41 @@
                 android:inputType="textPassword"
                 android:padding="10dp"
                 android:textColor="@color/black" />
+            <RadioGroup
+                android:id="@+id/roleRadioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
 
-            <!-- Sign Up Button -->
+                <RadioButton
+                    android:id="@+id/teacherRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Teacher"
+                    android:textColor="@color/black" />
+
+                <RadioButton
+                    android:id="@+id/studentRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:text="Student"
+                    android:textColor="@color/black" />
+            </RadioGroup>
+
+
             <Button
                 android:id="@+id/signbutton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:backgroundTint="@color/DirtyMatcha"
                 android:background="@drawable/dirtymatcha_border"
+                android:backgroundTint="@color/DirtyMatcha"
                 android:text="Sign Up"
                 android:textSize="18sp" />
 
 
-            <!-- Login Redirect Text -->
             <TextView
                 android:id="@+id/loginRedirectText"
                 android:layout_width="wrap_content"

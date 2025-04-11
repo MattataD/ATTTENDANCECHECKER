@@ -117,7 +117,7 @@ class STUDENTQR : AppCompatActivity() {
     private fun startCamera() {
         Log.d("STUDENTQR", "startCamera() called")
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
-        val screenSize = Size(1280, 720) // Adjust as needed
+        val screenSize = Size(1080, 720) // Adjust as needed
         val resolutionSelector = ResolutionSelector.Builder().setResolutionStrategy(
             ResolutionStrategy(screenSize, ResolutionStrategy.FALLBACK_RULE_CLOSEST_HIGHER)
         ).build()
@@ -178,44 +178,10 @@ class STUDENTQR : AppCompatActivity() {
             Log.d("STUDENTQR", "Camera unbound")
         }, ContextCompat.getMainExecutor(this))
     }
-
-    @OptIn(ExperimentalGetImage::class)
-    private fun processImageProxy(imageProxy: ImageProxy) {
-        val mediaImage = imageProxy.image
-        if (mediaImage != null) {
-            val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-            barcodeScanner.process(image)
-                .addOnSuccessListener { barcodes ->
-                    Log.d("STUDENTQR", "Barcode processing successful. Found ${barcodes.size} barcodes")
-                    if (barcodes.isNotEmpty() && isScanningActive) {
-                        // Stop scanning immediately after detecting a barcode
-                        isScanningActive = false
-                        scanButton.text = "Scan QR Code"
-                        cameraPreviewContainer.visibility = View.GONE
-                        stopCamera()
-                        for (barcode in barcodes) {
-                            handleBarcode(barcode)
-                        }
-                    }
-                }
-                .addOnFailureListener { e ->
-                    Log.e("STUDENTQR", "Barcode processing failed", e)
-                    if (isScanningActive) {
-                        resultTextView.text = "Failed to scan QR code: ${e.localizedMessage}"
-                    }
-                }
-                .addOnCompleteListener {
-                    imageProxy.close()
-                }
-        } else {
-            Log.d("STUDENTQR", "Media image is null")
-            imageProxy.close()
-        }
-    }
-
-    private fun handleBarcode(barcode: Barcode) {
+    private fun STUDENTQR.handleBarcode(barcode: Barcode) {
         val rawValue = barcode.rawValue
         if (!rawValue.isNullOrEmpty()) {
+            Log.d("STUDENTQR", "Detected Barcode Value: $rawValue")
             // Check if the scanned value looks like a URL
             if (rawValue.startsWith("http://") || rawValue.startsWith("https://")) {
                 // It's a link, proceed to open it in a WebView or browser
@@ -227,6 +193,105 @@ class STUDENTQR : AppCompatActivity() {
             }
         } else {
             resultTextView.text = "NO QR CODE DETECTED"
+        }
+    }
+    @OptIn(ExperimentalGetImage::class)
+    private fun processImageProxy(imageProxy: ImageProxy) {
+        val mediaImage = imageProxy.image
+        if (mediaImage != null && isScanningActive) {
+            val imageRotationDegrees = imageProxy.imageInfo.rotationDegrees
+            val image = InputImage.fromMediaImage(mediaImage, imageRotationDegrees)
+
+            // 1. Get the bounds of PreviewView and qrCodeFinder
+            val previewViewRect = previewView.run {
+                val location = IntArray(2)
+                getLocationOnScreen(location)
+                android.graphics.Rect(location[0], location[1], location[0] + width, location[1] + height)
+            }
+
+            val qrCodeFinderRectAbsolute = qrCodeFinder.run {
+                val location = IntArray(2)
+                getLocationOnScreen(location)
+                android.graphics.Rect(location[0], location[1], location[0] + width, location[1] + height)
+            }
+
+            // 2. Calculate the intersection of qrCodeFinder with PreviewView
+            val scanningRectAbsolute = android.graphics.Rect(qrCodeFinderRectAbsolute)
+            if (!scanningRectAbsolute.intersect(previewViewRect)) {
+                imageProxy.close()
+                return // Finder is not within the preview, no need to process
+            }
+
+            // 3. Calculate the relative coordinates of the scanning rect within PreviewView
+            val relativeLeft = scanningRectAbsolute.left - previewViewRect.left
+            val relativeTop = scanningRectAbsolute.top - previewViewRect.top
+            val relativeRight = relativeLeft + scanningRectAbsolute.width()
+            val relativeBottom = relativeTop + scanningRectAbsolute.height()
+
+            // 4. Normalize the relative coordinates based on the image dimensions and rotation
+            val imageWidth = mediaImage.width
+            val imageHeight = mediaImage.height
+
+            val normalizedRect = when (imageRotationDegrees) {
+                0 -> android.graphics.Rect(
+                    (relativeLeft * imageWidth / previewView.width.toFloat()).toInt(),
+                    (relativeTop * imageHeight / previewView.height.toFloat()).toInt(),
+                    (relativeRight * imageWidth / previewView.width.toFloat()).toInt(),
+                    (relativeBottom * imageHeight / previewView.height.toFloat()).toInt()
+                )
+                90 -> android.graphics.Rect(
+                    (relativeTop * imageWidth / previewView.height.toFloat()).toInt(),
+                    ((previewView.width - relativeRight) * imageHeight / previewView.width.toFloat()).toInt(),
+                    (relativeBottom * imageWidth / previewView.height.toFloat()).toInt(),
+                    ((previewView.width - relativeLeft) * imageHeight / previewView.width.toFloat()).toInt()
+                )
+                180 -> android.graphics.Rect(
+                    ((previewView.width - relativeRight) * imageWidth / previewView.width.toFloat()).toInt(),
+                    ((previewView.height - relativeBottom) * imageHeight / previewView.height.toFloat()).toInt(),
+                    ((previewView.width - relativeLeft) * imageWidth / previewView.width.toFloat()).toInt(),
+                    ((previewView.height - relativeTop) * imageHeight / previewView.height.toFloat()).toInt()
+                )
+                270 -> android.graphics.Rect(
+                    ((previewView.height - relativeBottom) * imageWidth / previewView.height.toFloat()).toInt(),
+                    ((relativeLeft) * imageHeight / previewView.width.toFloat()).toInt(),
+                    ((previewView.height - relativeTop) * imageWidth / previewView.height.toFloat()).toInt(),
+                    ((relativeRight) * imageHeight / previewView.width.toFloat()).toInt()
+                )
+                else -> android.graphics.Rect(0, 0, imageWidth, imageHeight) // Default to full image
+            }
+
+            barcodeScanner.process(image) // Process the full image
+                .addOnSuccessListener { barcodes ->
+                    Log.d("STUDENTQR", "Processed full image. Found ${barcodes.size} barcodes")
+                    if (barcodes.isNotEmpty()) {
+                        // Filter barcodes to check if they are within the normalizedRect
+                        val validBarcodes = barcodes.filter { barcode ->
+                            val boundingBox = barcode.boundingBox
+                            boundingBox?.let {
+                                normalizedRect.contains(it.left, it.top) && normalizedRect.contains(it.right, it.bottom)
+                            } ?: false
+                        }
+
+                        if (validBarcodes.isNotEmpty()) {
+                            isScanningActive = false
+                            scanButton.text = "Scan QR Code"
+                            cameraPreviewContainer.visibility = View.GONE
+                            stopCamera()
+                            validBarcodes.forEach { barcode ->
+                                handleBarcode(barcode) // Now handleBarcode is in the correct scope
+                            }
+                        }
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.e("STUDENTQR", "Barcode processing failed on full image", e)
+                    // Optionally handle failure
+                }
+                .addOnCompleteListener {
+                    imageProxy.close()
+                }
+        } else {
+            imageProxy.close()
         }
     }
 
@@ -252,3 +317,4 @@ class STUDENTQR : AppCompatActivity() {
         return "dummyStudentID123" // Placeholder
     }
 }
+
