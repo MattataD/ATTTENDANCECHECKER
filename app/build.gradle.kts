@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.gms.google-services")
     id("com.android.application")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -43,7 +43,6 @@ android {
 
 dependencies {
 
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -53,7 +52,9 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.firebase.auth)
-    implementation(libs.firebase.database)
+    implementation(libs.material)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -69,5 +70,11 @@ dependencies {
     implementation("androidx.compose.material:material:1.5.4")
     implementation ("androidx.cardview:cardview:1.0.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
-// Use the latest version// Or the latest version
+
+    // Use the camerax_version variable here
+    implementation("androidx.camera:camera-core:1.3.1") // Or the latest version
+    implementation("androidx.camera:camera-camera2:1.3.1") // Or the latest version
+    implementation("androidx.camera:camera-lifecycle:1.3.1") // Or the latest version
+    implementation("androidx.camera:camera-view:1.3.1") // Or the latest version
+    implementation("com.google.mlkit:barcode-scanning:17.2.0") // ou have this twice, keep only one
 }

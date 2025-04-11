@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "10225830496",
-    "project_id": "qr-attendance-3c657",
-    "storage_bucket": "qr-attendance-3c657.firebasestorage.app"
+    "project_number": "430990358918",
+    "project_id": "qr-attendance-fc9bf",
+    "storage_bucket": "qr-attendance-fc9bf.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:10225830496:android:1794239fa2252a29585105",
+        "mobilesdk_app_id": "1:430990358918:android:09797e8d1ee565604e1407",
         "android_client_info": {
           "package_name": "com.example.attendancecheck"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDJdkFahIftVVXbqlb6D-2f13NyESc-a3k"
+          "current_key": "AIzaSyCMR2B6CGpio6soy-AlCwPOdg2r5vdapQ8"
         }
       ],
       "services": {
