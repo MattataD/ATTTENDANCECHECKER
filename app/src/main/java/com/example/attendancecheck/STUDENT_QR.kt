@@ -23,6 +23,7 @@ import androidx.camera.core.resolutionselector.ResolutionStrategy
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -30,7 +31,7 @@ import com.google.mlkit.vision.common.InputImage
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class STUDENTQR : AppCompatActivity() {
+class student_qr : AppCompatActivity() {
 
     private lateinit var previewView: PreviewView
     private lateinit var resultTextView: TextView
@@ -82,13 +83,11 @@ class STUDENTQR : AppCompatActivity() {
             if (isScanningActive) {
                 cameraPreviewContainer.visibility = View.VISIBLE
                 resultTextView.text = "Scanning..."
-                // Check if permission is already granted before starting the camera
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                     == android.content.pm.PackageManager.PERMISSION_GRANTED
                 ) {
                     startCamera()
                 } else {
-                    // Request permission if not granted
                     requestPermissionLauncher.launch(Manifest.permission.CAMERA)
                 }
                 scanButton.text = "Stop Scan"
@@ -100,19 +99,40 @@ class STUDENTQR : AppCompatActivity() {
             }
         }
 
-        // Initial request for camera permission (will only trigger if not already granted)
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
             != android.content.pm.PackageManager.PERMISSION_GRANTED
         ) {
-            // Explain why permission is needed (optional)
             if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
                 resultTextView.text = "Camera permission is needed to scan QR codes."
-                // You might want to show a more user-friendly dialog here
             }
-            // Request the permission
-            // Note: We don't start the camera here, only when the button is pressed AND permission is granted.
+        }
+
+        // ✅ Bottom Navigation View Setup
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.qr -> {
+                    // Already on this screen
+                    true
+                }
+                R.id.student -> {
+                    val intent = Intent(this, studentprofile::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.logout -> {
+                    val intent = Intent(this, student_login::class.java)
+                    startActivity(intent)
+                    finish()
+                    true
+                }
+                else -> false
+            }
         }
     }
+
+
+
 
     private fun startCamera() {
         Log.d("STUDENTQR", "startCamera() called")
@@ -178,7 +198,7 @@ class STUDENTQR : AppCompatActivity() {
             Log.d("STUDENTQR", "Camera unbound")
         }, ContextCompat.getMainExecutor(this))
     }
-    private fun STUDENTQR.handleBarcode(barcode: Barcode) {
+    private fun student_qr.handleBarcode(barcode: Barcode) {
         val rawValue = barcode.rawValue
         if (!rawValue.isNullOrEmpty()) {
             Log.d("STUDENTQR", "Detected Barcode Value: $rawValue")

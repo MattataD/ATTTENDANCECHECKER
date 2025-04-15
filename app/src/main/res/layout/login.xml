@@ -8,7 +8,7 @@
     android:gravity="center"
     android:background="@drawable/group6"
     android:orientation="vertical"
-    tools:context=".STUDENT_LOGIN">
+    tools:context=".student_login">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"

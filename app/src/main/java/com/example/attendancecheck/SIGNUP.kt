@@ -32,7 +32,7 @@ class SIGNUP : AppCompatActivity(){
         firestore = FirebaseFirestore.getInstance()
 
         binding.loginRedirectText.setOnClickListener {
-            val intent = Intent(this, STUDENT_LOGIN::class.java) // Adjust if you have separate login screens
+            val intent = Intent(this, student_login::class.java) // Adjust if you have separate login screens
             startActivity(intent)
         }
 
@@ -70,7 +70,7 @@ class SIGNUP : AppCompatActivity(){
                                 firestore.collection("users").document(userId)
                                     .set(userMap)
                                     .addOnSuccessListener {
-                                        val intent = Intent(this, STUDENT_LOGIN::class.java) // Adjust as needed
+                                        val intent = Intent(this, student_login::class.java) // Adjust as needed
                                         startActivity(intent)
                                         finish()
                                     }

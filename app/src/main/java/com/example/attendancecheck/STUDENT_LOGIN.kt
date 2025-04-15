@@ -8,7 +8,7 @@ import com.example.attendancecheck.databinding.LoginBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class STUDENT_LOGIN : AppCompatActivity() {
+class student_login : AppCompatActivity() {
 
     private lateinit var binding: LoginBinding
     private lateinit var firebaseAuth: FirebaseAuth
@@ -45,7 +45,7 @@ class STUDENT_LOGIN : AppCompatActivity() {
                                             val role = document.getString("role")
                                             if (role == "student") {
                                                 Toast.makeText(this, "Student Login Successful!", Toast.LENGTH_SHORT).show()
-                                                val intent = Intent(this, STUDENTQR::class.java)
+                                                val intent = Intent(this, student_qr::class.java)
                                                 startActivity(intent)
                                                 finish()
                                             } else if (role == "teacher") {

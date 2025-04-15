@@ -1,15 +1,35 @@
 {
   "project_info": {
     "project_number": "430990358918",
+    "firebase_url": "https://qr-attendance-fc9bf-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "qr-attendance-fc9bf",
     "storage_bucket": "qr-attendance-fc9bf.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:430990358918:android:09797e8d1ee565604e1407",
+        "mobilesdk_app_id": "1:430990358918:android:416931f62697bc414e1407",
         "android_client_info": {
           "package_name": "com.example.attendancecheck"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMR2B6CGpio6soy-AlCwPOdg2r5vdapQ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:430990358918:android:3e701ea488ae7adc4e1407",
+        "android_client_info": {
+          "package_name": "com.example.qrstudent2"
         }
       },
       "oauth_client": [],

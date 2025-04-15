@@ -20,20 +20,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AttendanceCheck">
         <activity
-            android:name=".STUDENTPROFILE"
+            android:name=".studentprofile"
             android:exported="false" />
-        <activity
-            android:name=".CHOICE_QR"
-            android:exported="false"
-            android:theme="@style/Theme.AttendanceCheck" />
         <activity
             android:name=".WEBVIEWACTIVITY"
             android:exported="false" />
         <activity
-            android:name=".STUDENTQR"
+            android:name=".student_qr"
             android:exported="false" />
+        <activity android:name=".SIGNUP"
+            android:exported="false"/>
         <activity
-            android:name=".STUDENT_LOGIN"
+            android:name=".student_login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,9 +41,6 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SIGNUP"
             android:exported="false" />
     </application>
 
